@@ -1,7 +1,5 @@
 from typing import List
 
-# Not a leetcode problem
-
 def merge_sort(arr: List[int]):
 	# Merge sort has two part
 		# Divide
@@ -43,10 +41,3 @@ def merge(left: List[int], right: List[int], index: int):
 		j += 1
 		index += 1
 
-
-
-if __name__ == "__main__":
-	arr = [81,81,4,91,72,66,4,21]
-
-	merge_sort(arr)
-	print(arr)
