@@ -1,8 +1,6 @@
 from shortest_path_binary_matrix import shortestPathBinaryMatrix
 
 if __name__ == "__main__":
-    nums1 = "cacc"
-    nums2 = "aacc"
-    s = Solution()
-    n = s.isAnagram(s=nums1, t=nums2)
+    grid = [[0,0,0],[1,1,0],[1,1,1]]
+    n = shortestPathBinaryMatrix(grid)
     print("answer: ", n)
