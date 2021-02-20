@@ -17,7 +17,6 @@ class H2O:
 		print("H")
 
 	def reset(self):
-		print("Check release, ", self.oxy, "hy: ", self.hyd)
 		if self.oxy == 1 and self.hyd == 2:
 			self.oxy = 0
 			self.hyd = 0
