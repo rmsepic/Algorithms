@@ -41,9 +41,14 @@ void put_right_fork(int *num) {
 
 void philosopher(int* num) {
 	while(1) {
+		// mutex serves as the "waiter" or arbitrator. Prevents two philosphers from picking up 
+		// or putting down forks at the same time
+		// Does not halt the program for the first dining philosopher because the sem 
+		// was initalized to 1
 		dispatch_semaphore_wait(mutex, DISPATCH_TIME_FOREVER);
-		printf("Thread %u: %s is hungry. Num = %d\n", (unsigned)pthread_self(), phil[*num], *num);
+		printf("Thread %u: %s is hungry\n", (unsigned)pthread_self(), phil[*num]);
 		
+		// Try to eat
 		if (eating[LEFT] == false && eating[RIGHT] == false) {
 			take_right_fork(num);
 			take_left_fork(num);
@@ -52,27 +57,37 @@ void philosopher(int* num) {
 			dispatch_semaphore_signal(sems[*num]);
 		}
 
+		// If the philosopher cannot eat, then they free up the waiter to deal with someone else
 		dispatch_semaphore_signal(mutex);
+
+		// If the philosopher ate then they will pass through this because the semaphore will be 1
 		dispatch_semaphore_wait(sems[*num], DISPATCH_TIME_FOREVER);
 
+		// This portion of the function involves the putting down
+		// The waiter only deals with philosophers one at a time when they are handling the utencils
 		dispatch_semaphore_wait(mutex, DISPATCH_TIME_FOREVER);
+		
 		put_right_fork(num);
 		put_left_fork(num);
 		eating[*num] = false;
+
+		// Free up the waiter
 		dispatch_semaphore_signal(mutex);
-		dispatch_semaphore_wait(sems[*num], DISPATCH_TIME_FOREVER);
 	}
 }
 
 int main() {
+	// Initialize array, assigned numbers to each philosopher
+	// Prevents overwriting memory
 	int phil_nums[N];
-
 	for (int i = 0; i < N; i++) {
 		phil_nums[i] = i;
 	}
 
 	pthread_t id[N];
 
+	// Set this semaphore to 1
+	// When the first philosopher calls wait the thread does not wait for him
 	mutex = dispatch_semaphore_create(1);
 	for (int i = 0; i < N; i++) {
 		sems[i] = dispatch_semaphore_create(0);
