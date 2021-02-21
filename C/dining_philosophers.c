@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <pthread.h>
-#include <semaphore.h>
+#include <dispatch/dispatch.h>
+//#include <dispatch/sempahore.h>
+#include <dispatch/object.h>
 #include <stdbool.h>
 
 #define N 5 // Number of philosophers
 
-bool eating = {false, false, false, false, false};
-char *phil = {"Plato", "Konfuzius", "Socrates", "Voltaire", "Descartes"};
+bool eating[N] = {false, false, false, false, false};
+char *phil[N] = {"Plato", "Kant", "Sartre", "Kierkegaard", "Descartes"};
 
-sem_t sem;
-sem_t sems[N];
+dispatch_semaphore_t mutex;
+dispatch_semaphore_t sems[N];
 
 void take_left_fork() {
 
@@ -33,7 +35,7 @@ void put_right_fork() {
 
 void philosopher(int* num) {
 	while(1) {
-		sem_wait(&sem);
+		//dispatch_semaphore_wait(&sem);
 
 	}
 }
@@ -41,9 +43,9 @@ void philosopher(int* num) {
 int main() {
 	pthread_t id[N];
 
-	sem_init(&sem, 0, 1);
+	mutex = dispatch_semaphore_create(1);
 	for (int i = 0; i < N; i++) {
-		sem_init(&s[i], 0, 0);
+		sems[i] = dispatch_semaphore_create(0);
 	}
 
 	for (int i = 0; i < N; i++) {
