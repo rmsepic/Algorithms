@@ -1,3 +1,6 @@
+dining_philosophers:
+	gcc -o $@.exe $@.c
+
 fizz_buzz:
 	gcc -o fizz_buzz.exe fizz_buzz.c
 

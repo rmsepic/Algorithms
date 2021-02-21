@@ -1,3 +1,5 @@
+// Leetcode problem
+
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <pthread.h> 
@@ -129,7 +131,9 @@ void number(FizzBuzz* obj) {
 }
 
 void fizzBuzzFree(FizzBuzz* obj) {
-    
+	pthread_cond_destroy(&obj->cond);
+	pthread_mutex_destroy(&obj->lock);
+    free(obj);
 }
 
 int main() {
