@@ -1,3 +1,6 @@
+din_phil:
+	gcc -o $@.exe $@.c
+
 dining_philosophers:
 	gcc -o $@.exe $@.c
 
