@@ -14,67 +14,57 @@
 #define RIGHT *num // 'Right' for the fork, which is the same as the phil's number
 #define RIGHT_PHIL (*num + 1) % N // This is the philosopher sitting to the right
 
-//struct Forks {
-//	int resource;
-//	bool in_use;
-//}
-
-// This is to make sure that the threads are not modifying the same resource 
-// at the same time
-//struct Forks forks[N];
-
 //				0		1		2		3		4
 bool forks[N] = {false, false, false, false, false};
-char fork_name[N] = {		 'A',    'B',       'C', 		   'D', 		  'E'};
+char fork_name[N] = {		  'A',    'B',       'C', 		   'D', 		  'E'};
 const char *phil[N] = {"Plato", "Kant", "Sartre", "Kierkegaard", "Descartes"};
 dispatch_semaphore_t sems[N];
-
+dispatch_semaphore_t fork_sems[N];
 
 void take_left_fork(int* num) {
-	if (forks[LEFT] == true){
+	dispatch_semaphore_wait(fork_sems[LEFT], DISPATCH_TIME_FOREVER);
+	while (forks[LEFT] == true){
 		dispatch_semaphore_wait(sems[*num], DISPATCH_TIME_FOREVER);
 	} 
 
 	assert(forks[LEFT] == false);
 	forks[LEFT] = true;
-	printf("%s took left fork %c (%d)\n", phil[*num], fork_name[LEFT], LEFT);
+	dispatch_semaphore_signal(fork_sems[LEFT]);
 }
 
 void take_right_fork(int* num) {
-	if (forks[RIGHT] == true){
+	dispatch_semaphore_wait(fork_sems[RIGHT], DISPATCH_TIME_FOREVER);
+	while (forks[RIGHT] == true){
 		dispatch_semaphore_wait(sems[*num], DISPATCH_TIME_FOREVER);
 	} 
 
 	assert(forks[RIGHT] == false);
 	forks[RIGHT] = true;
-	printf("%s took right fork %c (%d)\n", phil[*num], fork_name[RIGHT], RIGHT);
+	dispatch_semaphore_signal(fork_sems[RIGHT]);
 }
 
 void eating(int* num) {	
 	printf("%s is eating\n", phil[*num]);
-	sleep(5);
+	//sleep(1);	// Give them some time to eat
 }
 
 void put_left_fork(int* num) {
-	printf("%s is done with left fork\n", phil[*num]);
+	dispatch_semaphore_wait(fork_sems[LEFT], DISPATCH_TIME_FOREVER);
 	forks[LEFT] = false;
+	dispatch_semaphore_signal(fork_sems[LEFT]);
 }
 
 void put_right_fork(int *num) {
-	printf("%s is done with right fork\n", phil[*num]);
+	dispatch_semaphore_wait(fork_sems[RIGHT], DISPATCH_TIME_FOREVER);
 	forks[RIGHT] = false;
+	dispatch_semaphore_signal(fork_sems[RIGHT]);
 }
 
 void unlock_sems(int* num, int side) {
 	// If this is 0 then that means that it is already waiting
 	if (dispatch_semaphore_wait(sems[side], DISPATCH_TIME_NOW) != 0) {
-		printf("%s is unlocking %s\n", phil[*num], phil[side]);
 		dispatch_semaphore_signal(sems[side]);
-	} else {
-		// Since wait is called above 1 needs to be added to the semaphore
-		//dispatch_semaphore_signal(sems[side]);
-		printf("%s's semaphore is not being unlocked\n", phil[side]);
-	}
+	} 
 }
 
 void philosopher(int *num) {
@@ -107,9 +97,11 @@ int main() {
 		phil_num[i] = i;
 	}
 
-	// Initalize semaphores
+	//mutex_left = dispatch_semaphore_create(1);
+	//mutex_right = dispatch_semaphore_create(1);
 	for (int i = 0; i < N; i++) {
 		sems[i] = dispatch_semaphore_create(0);
+		fork_sems[i] = dispatch_semaphore_create(1);
 	}
 	pthread_t id[N];
 
