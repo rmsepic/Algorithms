@@ -11,7 +11,8 @@
 
 #define N 5
 #define LEFT (*num + 4) % N
-#define RIGHT *num //(*num + 1) % N
+#define RIGHT *num // 'Right' for the fork, which is the same as the phil's number
+#define RIGHT_PHIL (*num + 1) % N // This is the philosopher sitting to the right
 
 //struct Forks {
 //	int resource;
@@ -49,21 +50,38 @@ void take_right_fork(int* num) {
 	printf("%s took right fork %c (%d)\n", phil[*num], fork_name[RIGHT], RIGHT);
 }
 
-void eating() {
-	while(1) {
-	}
+void eating(int* num) {	
+	printf("%s is eating\n", phil[*num]);
+	sleep(5);
 }
 
 void put_left_fork(int* num) {
 	printf("%s is done with left fork\n", phil[*num]);
+	forks[LEFT] = false;
 }
 
 void put_right_fork(int *num) {
 	printf("%s is done with right fork\n", phil[*num]);
+	forks[RIGHT] = false;
+}
+
+void unlock_sems(int* num, int side) {
+	// If this is 0 then that means that it is already waiting
+	if (dispatch_semaphore_wait(sems[side], DISPATCH_TIME_NOW) != 0) {
+		printf("%s is unlocking %s\n", phil[*num], phil[side]);
+		dispatch_semaphore_signal(sems[side]);
+	} else {
+		// Since wait is called above 1 needs to be added to the semaphore
+		//dispatch_semaphore_signal(sems[side]);
+		printf("%s's semaphore is not being unlocked\n", phil[side]);
+	}
 }
 
 void philosopher(int *num) {
 	while(1) {
+		// This first if statement is for Plato
+		// Since he is the first philosopher 
+		// he has to take the 'last' fork number 4
 		if (LEFT > *num) {
 			take_right_fork(num);
 			take_left_fork(num);
@@ -71,6 +89,13 @@ void philosopher(int *num) {
 			take_left_fork(num);
 			take_right_fork(num);
 		}
+
+		// After the philosopher has obtained both forks they can eat
+		eating(num);
+		put_right_fork(num);
+		put_left_fork(num);
+		unlock_sems(num, LEFT);
+		unlock_sems(num, RIGHT_PHIL);
 	}
 }
 
