@@ -29,7 +29,6 @@ void take_left_fork(int* num) {
 
 	assert(forks[LEFT] == false);
 	forks[LEFT] = true;
-	dispatch_semaphore_signal(fork_sems[LEFT]);
 }
 
 void take_right_fork(int* num) {
@@ -40,22 +39,18 @@ void take_right_fork(int* num) {
 
 	assert(forks[RIGHT] == false);
 	forks[RIGHT] = true;
-	dispatch_semaphore_signal(fork_sems[RIGHT]);
 }
 
 void eating(int* num) {	
 	printf("%s is eating\n", phil[*num]);
-	//sleep(1);	// Give them some time to eat
 }
 
 void put_left_fork(int* num) {
-	dispatch_semaphore_wait(fork_sems[LEFT], DISPATCH_TIME_FOREVER);
 	forks[LEFT] = false;
 	dispatch_semaphore_signal(fork_sems[LEFT]);
 }
 
 void put_right_fork(int *num) {
-	dispatch_semaphore_wait(fork_sems[RIGHT], DISPATCH_TIME_FOREVER);
 	forks[RIGHT] = false;
 	dispatch_semaphore_signal(fork_sems[RIGHT]);
 }
@@ -97,8 +92,6 @@ int main() {
 		phil_num[i] = i;
 	}
 
-	//mutex_left = dispatch_semaphore_create(1);
-	//mutex_right = dispatch_semaphore_create(1);
 	for (int i = 0; i < N; i++) {
 		sems[i] = dispatch_semaphore_create(0);
 		fork_sems[i] = dispatch_semaphore_create(1);
