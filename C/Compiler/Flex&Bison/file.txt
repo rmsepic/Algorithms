@@ -1,0 +1,6 @@
+I want to write a message
+And the program that I wrote
+should be able to count
+the total number of characters,
+words,
+and lines.

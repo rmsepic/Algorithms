@@ -22,7 +22,7 @@ int lines = 0;
 
 %%
 
-int main(int argc, char** argv) {
+int main() {
 	yylex();
 	printf("%8d%8d%8d\n", lines, words, chars);
 }
