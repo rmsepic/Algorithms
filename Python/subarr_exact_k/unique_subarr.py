@@ -1,3 +1,43 @@
+def linear(arr, n):
+    ans = 0 
+
+    right = 1
+
+    left = 0 
+    sub_arr = arr[left:right]
+    unique = 1
+
+    left_k_min = 0
+    sub_arr_k_min = arr[left:right]
+    unique_k_min = 1
+
+    while right < len(arr):  
+        # Found a unique character
+        if arr[right] not in sub_arr:
+            unique += 1
+
+        if arr[right] not in sub_arr_k_min:
+            unique_k_min += 1
+
+        while unique > n:
+            if arr[left] not in arr[left + 1: right + 1]:
+                unique -= 1
+
+            left += 1
+        
+        while unique_k_min >= n:
+            if arr[left_k_min] not in arr[left_k_min + 1: right + 1]:
+                unique_k_min -= 1
+
+            left_k_min += 1
+
+        right += 1
+        
+        sub_arr = arr[left:right]
+        sub_arr_k_min = arr[left_k_min:right]        
+        ans += left_k_min - left
+
+    return ans
 
 # This was a good idea but it relies on two functions callse which taeks too much
 def sliding(arr, n):
