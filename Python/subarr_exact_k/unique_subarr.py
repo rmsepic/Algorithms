@@ -1,5 +1,7 @@
 def linear(arr, n):
     ans = 0 
+    if n == 0:
+        ans = 1
 
     right = 1
 
