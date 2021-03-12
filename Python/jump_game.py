@@ -1,6 +1,6 @@
 from typing import List
         
-def jump_school(place: int, nums: List[int]):
+def jump_school(place: int, nums: List[int], dic: dict):
     print("Place ", place, nums[place])
     # The digit at this place will take us to the end
     if nums[place] + place >= len(nums) - 1:
@@ -14,15 +14,31 @@ def jump_school(place: int, nums: List[int]):
     return flag
 
 def canJump(nums: List[int]) -> bool:
+    dic = {}
+
     if nums[0] >= len(nums) - 1:
         return True
     
     flag = False
     for i in range(1, nums[0] + 1):
-        if jump_school(i, nums):
+        if jump_school(i, nums, dic):
             flag = True
             
     return flag
+
+def greedy(nums: List[int]) -> bool:
+        pos = i = len(nums) - 1
+       
+        i -= 1
+        while i >= 0:
+            if nums[i] + i >= pos:
+                pos = i
+                
+            i -= 1
+                
+        if pos == 0:
+            return True
+
 
 if __name__ == "__main__":
     #nums = [3,2,1,0,4]
