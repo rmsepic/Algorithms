@@ -2,26 +2,26 @@ from typing import List
 
 def largest_area(arr: List[int]) -> int:
     left = 0
-    right = 1
-    volume = min(arr[left], arr[right]) * (right - left)
+    right = len(arr) - 1
+    f_vol = lambda x, y, arr: min(arr[x], arr[y]) * (y - x)
+    left_ans = left
+    right_ans = right
+    vol = f_vol(left, right, arr)
 
-    i = 1
-    while i < len(arr) - left - 1 and right < len(arr) - 1:
-        right += 1
+    while left < right:
+        # Is the left pointer shorter than the right
+        if arr[left] <= arr[right]:
+            left += 1
+        # Right pointer is smaller than the left
+        else:
+            right += 1
+            
+        if f_vol(left, right, arr) > vol:
+            vol = f_vol(left, right, arr)
 
-        old_left = min(arr[left], arr[right]) * (right - left)
-        new_left = min(arr[left + i], arr[right]) * (right - (left + i))
-        
-        print("left", arr[left], " ", arr[right])
-        print("new ", arr[left + i], " ", arr[right])
+    return vol
 
-        if new_left >= old_left and arr[left] < arr[left + i]:
-            left = left + i
-            i = 0
-        
-        volume = max(old_left, new_left, volume)
-        print("vol ", volume)
-        print("")
-        i += 1
-
-    return volume
+if __name__ == "__main__":
+    arr = [2,3,10,5,7,8,9]
+    ans = largest_area(arr)
+    print(ans)
