@@ -28,12 +28,16 @@ def langford(N: int):
 
     return lang(N - 1, arr, index)
 
+# _,_,_,_,_,_,_,_,_,_
+# 5,_,4,_,_,_,5,4,_,_
+
 def langford_loop(N: int):
     ht = {} # Hold the number and its index
     arr = [-1 for i in range(0, 2 * N)]
-
+    start = 1
     i = 0
-    while N > 3:
+
+    while N > 0:
         # Add the new number
         if i + N + 1 < len(arr) and arr[i] == -1 and arr[i + N + 1] == -1:
             arr[i] = N 
@@ -41,13 +45,15 @@ def langford_loop(N: int):
             ht[N] = i
             N -= 1
         # Can't fit that number
-        else:
+        elif i >= len(arr):
             arr[ht[N + 1]] = -1
             arr[ht[N + 1] + N + 2] = -1
             print("removed: ", arr)
             ht.pop(N + 1)
-            i = arr.index(-1) + 1
+            i = start 
+            start = ht[N + 1] + 1
             N += 1
+        
         print(i)
         print(ht)
         print(arr)
@@ -56,13 +62,24 @@ def langford_loop(N: int):
 
     return arr
 
-        
+    
+# Checks if the array is a valid Langford Pair    
+def check(arr: List) -> bool:
+    for i in range(0, len(arr) // 2):
+        n = arr[i]
+        if arr[i] != arr[n + i]:
+            return False 
+
+    return True
 
 
 
 if __name__ == "__main__":
-    N = 5
+    N = 4
     ans = -1 #langford(N)
     ans_loop = langford_loop(N)
     print(ans, ans_loop)
+
     print(ans == ans_loop)
+
+    print(check(ans_loop))
