@@ -1,73 +1,85 @@
 from typing import List
 
-def lang(N: int, arr: List, index: int):
-    print(arr)
-    if index + N + 1 > len(arr):
-        if arr.count(-1) > 0:
-            index = arr.index(-1)
-        else:
-            return -1
+def lang(N: int, arr: List, index: int, ht: dict):
+    if N == 0:
+        return arr
+    
+    print(arr, N, index, index + N + 1)
 
-    # The array has place for this
-    if arr[index] == -1 and arr[index + N + 1] == -1:
+    # Place the next one
+    if index + N + 1 < len(arr) and arr[index] == -1 and arr[index + N + 1] == -1:
         arr[index] = N 
         arr[index + N + 1] = N
-        index += 1
-        return lang(N - 1, arr, index)
-    # The array has reached a contradiction
+        ht[N] = index
+        ans = lang(N - 1, arr, 0, ht)
+    # Try the next location
+    elif index + N + 1 < len(arr) and (arr[index] > 0 or arr[index + N + 1] > 0):
+        lang(N, arr, index + 1, ht)
+    # Roll it back
     else:
-        return lang(N, arr, index + 1)
+        index = ht[N + 1]
+        arr[index] = -1
+        arr[index + N + 1 + 1] = -1
+        ht.pop(N + 1)
+        lang(N + 1, arr, index + 1, ht)
+
+    return arr
 
 
 def langford(N: int):
     arr = [-1 for i in range(0, 2 * N)]
-    
+    ht = {}
     arr[0] = N 
     arr[N + 1] = N
     index = 1
+    ht[N] = 0
+    
+    ans = lang(N - 1, arr, index, ht)
 
-    return lang(N - 1, arr, index)
+    return ans
 
 # _,_,_,_,_,_,_,_,_,_
-# 5,_,4,_,_,_,5,4,_,_
+# 6,4,5,_,_,_,4,6,5,_,_,_
 
 def langford_loop(N: int):
-    ht = {} # Hold the number and its index
     arr = [-1 for i in range(0, 2 * N)]
-    start = 1
-    i = 0
+    ht = {}
+    #index = 0
+    start = 0
 
+    # Loop through numbers and place them
     while N > 0:
-        # Add the new number
-        if i + N + 1 < len(arr) and arr[i] == -1 and arr[i + N + 1] == -1:
-            arr[i] = N 
-            arr[i + N + 1] = N
-            ht[N] = i
-            N -= 1
-        # Can't fit that number
-        elif i >= len(arr):
-            arr[ht[N + 1]] = -1
-            arr[ht[N + 1] + N + 2] = -1
-            print("removed: ", arr)
-            ht.pop(N + 1)
-            i = start 
-            start = ht[N + 1] + 1
-            N += 1
-        
-        print(i)
-        print(ht)
         print(arr)
-        i += 1
+        flag = False
+        for index in range(start, len(arr) - N - 1):
+            # If the path is clear
+            if arr[index] == -1 and arr[index + N + 1] == -1:
+                arr[index] = N 
+                arr[index + N + 1] = N
+                ht[N] = index
+                flag = True
         
+        # Could not place N
+        # Have to go to N + 1 and place it somewhere else
+        if flag == False:
+            N += 1 
+            print(ht)
+            print(N)
+            start = ht[N]
+            ht.pop(N)
+        else:
+            N -= 1
+            start = 0
 
-    return arr
+    return True
 
     
 # Checks if the array is a valid Langford Pair    
 def check(arr: List) -> bool:
     for i in range(0, len(arr) // 2):
         n = arr[i]
-        if arr[i] != arr[n + i]:
+        print(arr[i], arr[n + i + 1], arr[i - n - 1])
+        if arr[i] != arr[n + i + 1] and arr[i] != arr[i - n - 1]:
             return False 
 
     return True
@@ -75,11 +87,13 @@ def check(arr: List) -> bool:
 
 
 if __name__ == "__main__":
-    N = 4
-    ans = -1 #langford(N)
-    ans_loop = langford_loop(N)
-    print(ans, ans_loop)
+    N = 6
+    ans = langford_loop(N)
+    print(ans)
+    print(check(ans))
+   # ans_loop = langford_loop(N)
+  #  print(ans, ans_loop)
 
-    print(ans == ans_loop)
+ #   print(ans == ans_loop)
 
-    print(check(ans_loop))
+#    print(check(ans_loop))
