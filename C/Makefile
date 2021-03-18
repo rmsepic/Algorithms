@@ -1,3 +1,6 @@
+check_regex:
+	gcc -o $@.exe $@.c
+
 din_phil:
 	gcc -o $@.exe $@.c
 
