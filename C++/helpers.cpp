@@ -1,15 +1,5 @@
 #include "helpers.h"
 
-template <typename T>
-void printVector(vector<T> v) {
-	cout << '{';
-	for (auto &itr: v) {
-		cout << itr << ',';
-	}
-
-	cout << '}' << endl;
-}
-
 void printVectorChar(vector<char> v) {
 	cout << '{';
 

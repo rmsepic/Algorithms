@@ -20,8 +20,8 @@ int longestValidParentheses(string s) {
 		// Valid pars need to begin with '('
 		vector<char> vec;
 		vec.push_back('(');
-		//printVectorChar(vec);
 		unsigned int temp_max = 0;
+		unsigned int right = i;
 		
 		// Loop through the string from i -> end of string
 		for (int j = i + 1; j < s.length(); j++) {
@@ -35,6 +35,7 @@ int longestValidParentheses(string s) {
 				} else {
 					// Extra ')' so it is no longer valid
 					// Go to the next iteration
+					i = right;
 					break;
 				}
 
@@ -43,11 +44,15 @@ int longestValidParentheses(string s) {
 				// If not then there are '(' that are unmatched
 				if (vec.size() == 0) {
 					max_ = max(max_, temp_max);
+					right = j;
 				} 
 			}
 
-			printVectorChar(vec);
+			cout << i << " " << j << " " << temp_max << endl;
+			printVector(vec);
 		}
+
+		i = right;
 		vec.clear();
 	}
 
@@ -55,7 +60,7 @@ int longestValidParentheses(string s) {
 }
 
 int main() {
-	string str = ")()())()()(";
+	string str = "))))())()()(()";
 	int ans = longestValidParentheses(str);
 	cout << ans << endl;
 }
