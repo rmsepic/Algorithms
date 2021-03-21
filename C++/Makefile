@@ -1,3 +1,6 @@
+trap_water:
+	g++ -std=c++11 -o $@.exe $@.cpp helpers.o
+
 longest_par: helpers.o
 	g++ -std=c++11 -o $@.exe $@.cpp helpers.o
 
