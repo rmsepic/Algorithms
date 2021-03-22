@@ -10,3 +10,11 @@ void printVectorChar(vector<char> v) {
 	
 	cout << '}' << endl;
 }
+
+void printMap(map<int,int> m) {
+	for(auto it = m.cbegin(); it != m.cend(); it++) {
+    	cout << it->first << " " << it->second << endl;;
+	}
+
+	cout << endl;
+}

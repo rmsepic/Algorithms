@@ -5,55 +5,54 @@
 #include "helpers.h"
 
 using namespace std;
-/*
- * Loop through the vector
- * For each index in the vector (except for the last one)
- * Calculate the total volume it holds
- * Given an array [i, j, k]
- * Store in a map {i: V1, j: V2}
- * Volume is calculated by V = min(i,k) * (k - i) where k >= i
- */
+
 int trapWater(vector<int> &height) {
-	//map<int, int> m;
-	unsigned int total_volume = 0;
-	unsigned int left = 0, right = 1;
-	vector<int> vols;
-	bool flag = true;
+	if (height.size() <= 2) {
+		return 0;
+	}
+
+	int ans = 0;
+	int left = 0, right = 2;
+	map<int, int> m;
 
 	while (left < height.size() - 1) {
-		cout << height[left] << endl;
-		right = left + 1;
-		while (height[right] < height[left]) {
-			if (right < height.size()) {
-				right++;
-			} else {
-				// Go back to the first loop
-				flag = false;
+		while(height[right] <= height[right - 1]) {
+			right++;
+
+			if (right >= height.size()) {
 				break;
 			}
 		}
 
-		if (flag == true) {
-			int vol = right - left - 1;
-			vols.push_back(vol);
+		int vol = min(height[left], height[right]) * (right - left - 1);
+		cout << "vol " << vol << " Left " << left << " Right " << right << endl;
+		for (int i = left + 1; i < right - 1; i++) {
+			vol -= height[i];
 		}
 
+		if (m.count(left) > 0) {
+			int x = max(m[left], vol);
+			m.insert(pair<int,int>(left, x));
+		} else {
+			m.insert(pair<int,int>(left, vol));
+		}
+
+		printMap(m);
+
+		ans += vol;
 		left++;
-		flag = true;
+		right = left + 2;
 	}
 
-	printVector(vols);
 
-	for (int i = 0; i < vols.size(); i++) {
-		total_volume += vols[i];
-	}
-
-	return total_volume;
+	return ans;
 }
 
 int main() {
 	//vector<int> height = {0,1,0,2,1,0,1,3,2,1,2,1};
-	vector<int> height = {4,2,0,3,2,5};
+	vector<int> height = {4,1,2,1,3,2};
 	int ans = trapWater(height);
 	cout << "Answer: " << ans << endl;
+
+	return 0;
 }
