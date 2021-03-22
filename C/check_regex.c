@@ -3,65 +3,45 @@
 #include <stdbool.h>
 #include <string.h>
 
-// Iterate through s and p individually 
-// Try to match one to the next
-// Let i be in |s|
-// If s[i] = . then ignore p[i]
-// If s[i + 1] = '*' then check s[i] for 0 or more in p
-int getRemaining(const int index, const char *s) {
-    int count = 0;
-    int i = index;
-
-    while (i < strlen(s)) {   
-        if (i + 1 < strlen(s) && s[i + 1] == '*') {
-            // Do not count this 
-            i += 2;
-        } else {
-            count++;
-            i++;
-        }
-    }
-
-    return count;
-}
-
+// p is the string
+// s is the regex
 bool match(char *s, char *p) {
-    int j = 0;
-    //printf("length %d\n", (int)strlen(s));
-    for (int i = 0; i < (int)strlen(s); i++) {
-        // Check for all occurences of s[i] in p
-        printf("%d %c == %c\n", i, s[i], p[j]);
-        if (i + 1 < strlen(s) && s[i + 1] == '*') {
-            printf("Kleene\n");
-            int remaining = getRemaining(i, s);
+    bool arr[(int)strlen(p) + 1][(int)strlen(s) + 1];
 
-            while (j < ((int)strlen(p) - remaining)) { 
-                if (s[i] == p[j] || s[i] == '.') {
-                    j++;
-                }
-            }
-
-            // Skip over the s[i + 1] because it is equal to '*'
-            i++;
-        // No Kleene star
-        } else if (j < (strlen(p)) && (s[i] == p[j] || s[i] == '.')) {
-            j++;
-        } else {
-            printf("DID NOT MATCH \n");
-            return false;
+    for (int x = 0; x < (int)strlen(p) + 1; x++) {
+        for (int y = 0; y < (int)strlen(s) + 1; y++) {
+            arr[x][y] = false;
         }
-
     }
-    
-    printf("Finished\n");
-    return j == strlen(p) ? true : false;
+
+    arr[(int)strlen(p)][(int)strlen(s)] = true;
+
+    // Loop through the string
+    for (int j = (int)strlen(p); j >= 0; j--) {
+        // Loop through the regex
+        for (int i = (int)strlen(s) - 1; i >= 0; i--) {
+            // Is the length of j less than the length of the string
+            bool match = (j < (int)strlen(p)) && (s[i] == p[j] || s[i] == '.');
+                        
+            if (i + 1 < (int)strlen(s) && s[i + 1] == '*') {
+                arr[j][i] = arr[j][i + 2] || (match && arr[j + 1][i]);
+            } else {
+                arr[j][i] = match && arr[j + 1][i + 1];
+            }
+        }
+    }
+
+    return arr[0][0];
 }
 
 bool isMatch(char * s, char * p){
-    return (match(s, p) == true || match(p, s) == true) ? true : false;
+    //return (match(s, p) == true || match(p, s) == true) ? true : false;
+    return match(p, s);
 }
 
 int main() {
-    bool ans = isMatch("aasdfasdfas", "aasdf.*asdf.*s");
-    printf("Ans %d\n", ans);
+    // 10 13
+    //bool ans = isMatch("aasdfasdfas", "aasdf.*asdf.*s");
+    bool ans = isMatch("aa", "a*");
+    printf("\nAns %d\n", ans);
 }
