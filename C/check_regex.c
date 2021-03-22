@@ -27,20 +27,23 @@ int getRemaining(const int index, const char *s) {
 
 bool match(char *s, char *p) {
     int j = 0;
-    for (int i = 0; i < strlen(s); i++) {
-        printf("%c    %c\n", s[i], p[j]);
+    //printf("length %d\n", (int)strlen(s));
+    for (int i = 0; i < (int)strlen(s); i++) {
         // Check for all occurences of s[i] in p
+        printf("%d %c == %c\n", i, s[i], p[j]);
         if (i + 1 < strlen(s) && s[i + 1] == '*') {
+            printf("Kleene\n");
             int remaining = getRemaining(i, s);
-            printf("remaining %d, %lu     %d \n", remaining, strlen(p), j);
+
             while (j < ((int)strlen(p) - remaining)) { 
                 if (s[i] == p[j] || s[i] == '.') {
                     j++;
                 }
             }
-            
+
             // Skip over the s[i + 1] because it is equal to '*'
             i++;
+        // No Kleene star
         } else if (j < (strlen(p)) && (s[i] == p[j] || s[i] == '.')) {
             j++;
         } else {
@@ -48,9 +51,9 @@ bool match(char *s, char *p) {
             return false;
         }
 
-        //printf("j: %d\n", j);
     }
     
+    printf("Finished\n");
     return j == strlen(p) ? true : false;
 }
 
@@ -59,7 +62,6 @@ bool isMatch(char * s, char * p){
 }
 
 int main() {
-    //bool ans = isMatch("a", ".*..a*");
-    bool ans = isMatch("aasdfasdfasdfasdfas", "aasdf.*asdf.*asdf.*asdf.*s");
+    bool ans = isMatch("aasdfasdfas", "aasdf.*asdf.*s");
     printf("Ans %d\n", ans);
 }
