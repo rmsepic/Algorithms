@@ -1,4 +1,30 @@
-//
+func nextGreaterElement(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var dict:[Int: Int] = [:]
+        var stack:[Int] = []
+        var ans:[Int] = []
+        stack.append(nums2[0])
+        
+        for n in nums2 {            
+            while stack.count > 0 && n > stack[stack.count - 1] {
+                dict[stack[stack.count - 1]] = n
+                stack.removeLast()
+            }
+            stack.append(n)
+        }
+        
+        print(dict)
+        
+        for n1 in nums1 {
+            if let x = dict[n1] {
+                ans.append(x);      
+            } else {
+                ans.append(-1)   
+            }
+        }
+        
+        return ans;
+    }
+
 func nextGreaterElementNaive(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
         var j = 0;
         var left = 0;
