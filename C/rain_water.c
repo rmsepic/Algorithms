@@ -14,33 +14,39 @@ int min(int x, int y) {
 }
 
 int rain_water(int *arr, int size) {
-	if (size < 1) {
+	if (size < 2) {
 		return 0;
 	}
 
 	int ans = 0;
-	struct Bar left, prev;
+	struct Bar left, greatest;
 	
 
-	for (int i = 1; i < size; i++) {
-		// Found a container
-		if (arr[i - 1] < arr[i]) {
-			int area = arr[i];
+	for (int j = 0; j < size - 1; j++) {
+		left.height = arr[j];
+		left.index = j;
+		greatest.height = arr[j + 1];
+		greatest.index = j;
+		int area = greatest.height;
 
-			// Looking for right side of container
-			for (int j = i - 2; j >= 0; j--) {
-				if (j == 0) {
-					if (arr[j] >= arr[i]) {
-						int vol = min(arr[j], arr[i]) * (i - j - 1);
-						ans += vol - area;
-					}
-				} else if (arr[j] > arr[i - 1]) {
-					int vol = min(arr[j], arr[i]) * (i - j - 1);
+		for (int i = 2; i < size; i++) {
+			// Found a right and will need to recalc left
+			if (arr[i] >= left.height) {
+				int vol = min(left.height, arr[i]) * (i - left.index - 1);
+				
+				if (vol - area > 0) {
 					ans += vol - area;
 				}
-
-				area += arr[j];
+				
+				area = 0;
+				j = i;
+				continue;
+			} else if (arr[i] >= greatest.height) {
+				greatest.height = arr[i];
+				greatest.index = i;
 			}
+
+			area += arr[i];
 		}
 	}
 
