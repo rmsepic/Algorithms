@@ -24,34 +24,44 @@ string intToRoman(int num) {
 		int num = (str[i] - '0');
 		int figure = pow(10, str.size() - i - 1);
 		string s;
+		int w = 0, x = 0, y = 0, z = 0;
 
 		if (figure == 1000) {
-
+			// Only go up to 3 
+			z = 1000;
 		} else if (figure == 100) {
-
+			x = 1000;
+			y = 500;
+			z = 100;
 		} else if (figure == 10) {
-
+			x = 100;
+			y = 50;
+			z = 10;
 		} else if (figure == 1) {
-			while (num > 0) {
-				if (num == 9) {
-					s += m[1];
-					s += m[10];
-					num -= 9;
-				} else if (num >= 5) {
-					s += m[5];
-					num -= 5;
-				} else if (num == 4) {
-					s += m[1];
-					s += m[5];
-					num -= 4;
-				} else {
-					s += m[1];
-					num -= 1;
-				}
-			}
-
-			ans += s;
+			x = 10;
+			y = 5;
+			z = 1;
 		}
+
+		while (num > 0) {
+			if (num == 9) {
+				s += m[z];
+				s += m[x];
+				num -= 9;
+			} else if (num >= 5) {
+				s += m[y];
+				num -= 5;
+			} else if (num == 4) {
+				s += m[z];
+				s += m[y];
+				num -= 4;
+			} else {
+				s += m[z];
+				num -= 1;
+			}
+		}
+
+		ans += s;
 	}
 
 	return ans;
@@ -59,7 +69,7 @@ string intToRoman(int num) {
 
 int main() {
 	// 1 <= num <= 3999
-	int num = 4;
+	int num = 1994;
 	string ans = intToRoman(num);
 
 	cout << ans << endl;
