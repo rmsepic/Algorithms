@@ -1,3 +1,6 @@
+int_to_roman:
+	g++ -std=c++11 -o $@.exe $@.cpp 
+
 trap_water: helpers.o
 	g++ -std=c++11 -o $@.exe $@.cpp helpers.o
 
