@@ -19,29 +19,27 @@ int rain_water(int *arr, int size) {
 	}
 
 	int ans = 0;
-	struct Bar left;
+	struct Bar left, prev;
 	
 
-	for (int i = 0; i < size; i++) {
-		left.height = arr[i];
-		left.index = i;
-		
-		for (int j = i + 1; j < size; j++) {
-			// Found a right side bar, so the container can now hold water
-			if (arr[j] >= left.height) {
-				int vol = min(left.height, arr[j]) * (j - left.index - 1);
-				printf("i: %d   j: %d    vol: %d\n", i, j, vol);
-				//printf("i: %d/%d    j: %d/%d    vol: %d\n", i, arr[i], j, arr[j], vol);
-				//printf("arr[j]: %d    left.height: %d    vol: %d\n", arr[j], left.height, vol);
-				for (int k = i + 1; k < j; k++) {
-					vol -= arr[k];
-					printf("arr[k]: %d    ", arr[k]);
+	for (int i = 1; i < size; i++) {
+		// Found a container
+		if (arr[i - 1] < arr[i]) {
+			int area = arr[i];
+
+			// Looking for right side of container
+			for (int j = i - 2; j >= 0; j--) {
+				if (j == 0) {
+					if (arr[j] >= arr[i]) {
+						int vol = min(arr[j], arr[i]) * (i - j - 1);
+						ans += vol - area;
+					}
+				} else if (arr[j] > arr[i - 1]) {
+					int vol = min(arr[j], arr[i]) * (i - j - 1);
+					ans += vol - area;
 				}
 
-				ans += vol;
-				printf("ans: %d\n\n", ans);
-				i = j - 1;
-				break;
+				area += arr[j];
 			}
 		}
 	}
@@ -49,9 +47,11 @@ int rain_water(int *arr, int size) {
 	return ans;
 }
 
-# define SIZE 3
+# define SIZE 6
 int main(int argc, char **argv) {
-	int height[SIZE] = {4,2,3};
+	int height[SIZE] = {5,4,3,0,2,4};
+	// {2,0,3,4};
+	//{4,2,3};
 	// {4,2,0,3,2,5};
 	// {5,4,3,0,2,4};
 	// {0,1,0,2,1,0,1,3,2,1,2,1};
