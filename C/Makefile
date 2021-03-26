@@ -1,3 +1,6 @@
+rain_water:
+	gcc -o $@.exe $@.c
+
 check_regex:
 	gcc -o $@.exe $@.c
 
