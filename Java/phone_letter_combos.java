@@ -1,18 +1,13 @@
-// Leetcode problem
-
 class Solution {
-    private Map<Character, String> buttons = new HashMap<Character, String>();
-    
-    public void initialize_buttons() {
-        buttons.put('2', "abc");
-        buttons.put('3', "def");
-        buttons.put('4', "ghi");
-        buttons.put('5', "jkl");
-        buttons.put('6', "mno");
-        buttons.put('7', "pqrs");
-        buttons.put('8', "tuv");
-        buttons.put('9', "wxyz");
-    }
+    private Map<Character, String> buttons = Map.of(
+        '2', "abc",
+        '3', "def",
+        '4', "ghi",
+        '5', "jkl",
+        '6', "mno",
+        '7', "pqrs",
+        '8', "tuv",
+        '9', "wxyz");
     
     public List<String> dfs(List<String> level, String remaining_digits) {
         // If empty return empty
@@ -40,9 +35,7 @@ class Solution {
         if (digits.length() == 0) {
             return permutations;
         }
-        
-        initialize_buttons();
-        
+                
         // First set of letters
         String letters = buttons.get(digits.charAt(0));
         for (int i = 0; i < letters.length(); i++) {
