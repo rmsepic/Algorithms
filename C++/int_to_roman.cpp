@@ -7,6 +7,7 @@
 using namespace std;
 
 string intToRoman(int num) {
+	// Initalize map
 	map<int, string> m;
 	m[1] = 'I';
 	m[5] = 'V';
@@ -18,13 +19,12 @@ string intToRoman(int num) {
 
 	// Convert num to a string
 	string str = to_string(num);
-	string ans;
+	string s;	// Answer string
 
 	for (int i = 0; i < str.size(); i++){
-		int num = (str[i] - '0');
-		int figure = pow(10, str.size() - i - 1);
-		string s;
-		int w = 0, x = 0, y = 0, z = 0;
+		int num = (str[i] - '0');	// Represents the digit x000
+		int figure = pow(10, str.size() - i - 1); // The order of the numbers
+		int x = 0, y = 0, z = 0;
 
 		if (figure == 1000) {
 			// Only go up to 3 
@@ -60,8 +60,6 @@ string intToRoman(int num) {
 				num -= 1;
 			}
 		}
-
-		ans += s;
 	}
 
 	return ans;
