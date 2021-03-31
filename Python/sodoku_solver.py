@@ -19,7 +19,12 @@ class Sodoku:
     def __init__(self, board: List[List[Cell]]):
         self.board = board
 
-    def dfs(self, row: int, col: int) -> None:
+    def dfs(self, row: int, col: int) -> bool:
+        self.printBoard()
+
+        if row == self.LENGTH and col == self.LENGTH:
+            return True
+
         for i in range(row, self.LENGTH):
             for j in range(col, self.LENGTH):
                 if (self.board[i][j] == Cell.EMPTY.value):
@@ -29,12 +34,26 @@ class Sodoku:
                         if t not in board[i] and t not in self.getCol(j):
                             self.board[i][j] = t
                             self.dfs(i, j)
-                            
+
+                            if self.dfs(i, j) is True:
+                                return True
+
+                            self.board[i][j] = Cell.EMPTY.value
+
+                    return False
+
+        return True
                        
 
 
     def getCol(self, col: int) -> List[Cell]:
         return [row[col] for row in self.board]
+
+    def printBoard(self):
+        for row in self.board:
+            print(row)
+
+        print()
 
     # This function can be called from anywhere
     # Call this function on some board that needs to be solved
@@ -50,12 +69,20 @@ class Sodoku:
                         if t not in board[i] and t not in col:
                             # Try this number
                             sodoku.board[i][j] = t
-                            print(sodoku.board)
-                            sodoku.dfs(i, j)
+                            if sodoku.dfs(i, 0) is True:
+                                return 
+
+                            sodoku.board[i][j] = Cell.EMPTY.value
+
+                    return False
+
+
 
 
 
 if __name__ == "__main__":
     board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]
     Sodoku.solve(board)
-    print(board)
+
+    for row in board:
+        print(row)
