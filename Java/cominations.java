@@ -1,4 +1,4 @@
-// Given to positive integers
+// Given two positive integers
 // n and k where k <= n
 // Return a set of combinations of [1..n] of length k
 
