@@ -20,12 +20,8 @@ class Sodoku:
         self.board = board
 
     def dfs(self, row: int, col: int) -> bool:
-        self.printBoard()
-
-        if row == self.LENGTH and col == self.LENGTH:
-            return True
-
         for i in range(row, self.LENGTH):
+            col = 0
             for j in range(col, self.LENGTH):
                 if (self.board[i][j] == Cell.EMPTY.value):
                     # Try to place 1-9 in the empty cell
@@ -33,9 +29,9 @@ class Sodoku:
                         t = s.value
                         if t not in board[i] and t not in self.getCol(j):
                             self.board[i][j] = t
-                            self.dfs(i, j)
+                            flag = self.dfs(i, j)
 
-                            if self.dfs(i, j) is True:
+                            if flag is True:
                                 return True
 
                             self.board[i][j] = Cell.EMPTY.value
@@ -69,7 +65,11 @@ class Sodoku:
                         if t not in board[i] and t not in col:
                             # Try this number
                             sodoku.board[i][j] = t
-                            if sodoku.dfs(i, 0) is True:
+                            
+                            #sodoku.printBoard()
+                            
+                            flag = sodoku.dfs(i, 0) 
+                            if flag is True:
                                 return 
 
                             sodoku.board[i][j] = Cell.EMPTY.value
@@ -77,12 +77,10 @@ class Sodoku:
                     return False
 
 
-
-
-
 if __name__ == "__main__":
     board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]
     Sodoku.solve(board)
 
+    print("Answer: ")
     for row in board:
         print(row)
