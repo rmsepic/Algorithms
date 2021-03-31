@@ -13,7 +13,7 @@ class Cell(Enum):
     NINE = "9"
     EMPTY = "."
 
-class Sodoku: 
+class Sudoku: 
     LENGTH = 9
 
     def __init__(self, board: List[List[Cell]]):
@@ -26,9 +26,8 @@ class Sodoku:
                 if (self.board[i][j] == Cell.EMPTY.value):
                     # Try to place 1-9 in the empty cell
                     for s in Cell:
-                        t = s.value
-                        if t not in board[i] and t not in self.getCol(j):
-                            self.board[i][j] = t
+                        if s.value not in board[i] and s.value not in self.getCol(j):
+                            self.board[i][j] = s.value
                             flag = self.dfs(i, j)
 
                             if flag is True:
@@ -54,32 +53,13 @@ class Sodoku:
     # This function can be called from anywhere
     # Call this function on some board that needs to be solved
     def solve(board: List[List[Cell]]) -> None:
-        sodoku = Sodoku(board)
-
-        for i in range(0, sodoku.LENGTH):
-            for j in range(0, sodoku.LENGTH):
-                col = sodoku.getCol(j)
-                if (sodoku.board[i][j] == Cell.EMPTY.value):
-                    for s in Cell:
-                        t = s.value
-                        if t not in board[i] and t not in col:
-                            # Try this number
-                            sodoku.board[i][j] = t
-                            
-                            #sodoku.printBoard()
-                            
-                            flag = sodoku.dfs(i, 0) 
-                            if flag is True:
-                                return 
-
-                            sodoku.board[i][j] = Cell.EMPTY.value
-
-                    return False
+        sudoku = Sudoku(board)
+        sudoku.dfs(0, 0)
 
 
 if __name__ == "__main__":
     board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]
-    Sodoku.solve(board)
+    Sudoku.solve(board)
 
     print("Answer: ")
     for row in board:
