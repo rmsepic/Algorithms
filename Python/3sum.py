@@ -17,14 +17,11 @@ def threeSum_unique_duplicates(nums: List[int]) -> List[List[int]]:
 
 def threeSum(nums: List[int]) -> List[List[int]]:
     nums.sort()
-    print(nums)
     ht = {}
     ans = []
 
     for i, val in enumerate(nums):
         ht[val] = i
-
-    print(ht)
 
     for i in range(0, len(nums) - 1):
         if i - 1 >= 0 and nums[i] == nums[i - 1]: 
@@ -40,11 +37,3 @@ def threeSum(nums: List[int]) -> List[List[int]]:
                         ans.append([nums[i], nums[j], target])
 
     return ans
-
-
-
-
-if __name__ == "__main__":
-    l = [0,0,0]
-    ans = threeSum(l)
-    print(ans)
