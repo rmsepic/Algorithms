@@ -1,3 +1,6 @@
+ksum: helpers.h
+	g++ -std=c++11 -o $@.exe $@.cpp 
+
 int_to_roman:
 	g++ -std=c++11 -o $@.exe $@.cpp 
 
