@@ -43,3 +43,34 @@ bool isMatch_naive(char * s, char * p){
         }
     }
 }
+
+bool isMatch(char * s, char * p){
+    char *s_i;
+    char *p_i;
+    char *s_star = NULL;
+    char *p_star = NULL;
+    
+    for (s_i = s, p_i = p; *s_i != '\0'; s_i++, p_i++) {
+        if (*p_i == '*') {
+            s_star = s_i;
+            p_star = p_i;
+            s_i--;
+        } else {
+            // They do not match
+            if (*s_i != *p_i && *p_i != '?') {
+                if (s_star != NULL) {
+                    s_i = s_star++;
+                    p_i = p_star;
+                } else {
+                    return false;
+                }
+            } 
+        }
+    }
+    
+    while (*p_i == '*') {
+        p_i++;
+    }
+    
+    return (*s_i == '\0' && *p_i == '\0');
+}
