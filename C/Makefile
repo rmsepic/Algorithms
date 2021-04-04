@@ -1,3 +1,9 @@
+generate_pars:
+	gcc -o $@.exe $@.c
+
+pointers:
+	gcc -o $@.exe $@.c
+
 rain_water:
 	gcc -o $@.exe $@.c
 
