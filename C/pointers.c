@@ -5,28 +5,18 @@
 #define SIZE 3
 
 void foo(char *c) {
-	
+	free(c);
 }
 
 int main() {
-	char *a = "abc";
-	char *z = "xyz";
+	char *a = (char*)malloc(sizeof(char));
 
-	char **c = (char**)malloc(sizeof(char*) * 2);
-	c[0] = a;
-	c[1] = z;
+	strcpy(a, "abc");
+	foo(a);
 
-	free(c);
-	//char **e = (char**)malloc(sizeof(char*) * 2);
-	//e = c;
-	char **d = (char**)malloc(sizeof(char*) * 2);
-	for (int i = 0; i < 2; i++) {
-		d[i] = c[i];
-	}
 
-	for (int i = 0; i < 2; i++) {
-		printf("d: %s\n", d[i]);
-	}
+	printf("%s\n", a);
+	
 
 	return 0;
 }
