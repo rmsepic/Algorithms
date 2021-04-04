@@ -1,3 +1,8 @@
+// Because the memory management is difficult in C
+// I wrote the solution first in Python
+// https://github.com/rmsepic/Algorithms/blob/master/Python/generate_pars.py
+// Then converted it
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
