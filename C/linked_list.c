@@ -9,7 +9,6 @@ struct ListNode {
 struct ListNode* generate_list(int arr[], int size) {
 	struct ListNode *head = (struct ListNode*)malloc(sizeof(struct ListNode));
 	head->val = arr[0];
-	//head->next = (struct ListNode*)malloc(sizeof(struct ListNode));
 	
 	struct ListNode *node, *prev; 
 	node = head->next;
