@@ -1,3 +1,6 @@
+linked_list:
+	gcc -o $@.exe $@.c
+
 generate_pars:
 	gcc -o $@.exe $@.c
 
